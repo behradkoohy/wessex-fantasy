@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<style type="text/css">
 
+
+
+</style>
 <html>
 <head>
 	<!-- Required meta tags -->
@@ -11,10 +15,31 @@
 
 	<title>Wessex Fantasy Hockey</title>
 	<nav class="navbar navbar-light" style="background-color: #800000;">
-  		<a class="navbar-brand" style="color:white" href="#">Wessex Fantasy Hockey</a>
-
+  		<a class="navbar-brand" style="color:white; " href="/">Fantasy Hockey</a>
+	  	<ul class="navbar-nav mr-auto" style="color: white;">
+	  		<li class="nav-item">
+	  			<a class="nav-link" href="/addplayer">Add Player</a>
+	  		</li>
+	  	</ul>
 	</nav>
+
+
 </head>
+
+<div style="margin: auto; width: 75%; padding: 10px">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+		  {% if messages %}
+		    {% for category, message in messages %}
+		      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+		      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		      <!-- <strong>Title</strong> --> {{ message }}
+		      </div>
+		    {% endfor %}
+		  {% endif %}
+		{% endwith %}
+</div>
+
 
 <body style="background-color: #0a1a2d; ">
 <div style="margin: auto; width: 75%; padding: 10px">

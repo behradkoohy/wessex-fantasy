@@ -6,25 +6,40 @@
 h3 {color: white;}
 footer {color: white;}
 label {color: white;}
+
+
 </style>
 
 <h3>Register a player</h3>
 <div>
-	<form>
+	<form method="post">
 		<div class="form-group">
 			<label for="playername">Player Name</label>
 			<input type="text" name="playername" class="form-control" id="playername" placeholder="Name">
 		</div>
 		<div class="form-group">
 			<label for="playernumber">Player Number</label>
-			<input type="number" name="playername" class="form-control" id="playernumber">
+			<input type="number" name="playernumber" class="form-control" id="playernumber">
+		</div>
+		<div class="form-group">
+			<label for="playernickname">Player Nickname</label>
+			<input type="text" name="playernickname" class="form-control" id="playernickname" placeholder="Nickname (Optional)">
 		</div>
 		<div class="form-group">
 			<label for="playerteam">Player Team</label>
-			<select id="playerteam" class="form-control">
+			<select id="playerteam" name="playerteam" class="form-control">
 				{% for t in data['teams'] %}
 					<option value="{{ t }}">{{ t }}</option>
 				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="playerpos">Player Position</label>
+			<select id="playerpos" name="playerpos" class="form-control">
+					<option value="Forward">Forward</option>
+					<option value="Midfield">Midfield</option>
+					<option value="Defence">Defence</option>
+					<option value="Goalkeeper">Goalkeeper</option>
 			</select>
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
