@@ -138,6 +138,17 @@ def add_player_page():
 				flash(message, 'success')
 		return render_template('add_player.html', data=pass_through)
 
+def reset_table():
+	curs = conn.cursor()
+	curs.execute('DROP TABLE users;')
+	conn.commit()
+	curs.execute("""CREATE TABLE IF NOT EXISTS users
+							(user_id serial PRIMARY KEY,
+							email TEXT NOT NULL UNIQUE,
+							password_hash TEXT NOT NULL,
+							name TEXT NOT NULL);
+							""")
+	conn.commit()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -151,8 +162,7 @@ def register():
 			return render_template('register.html')
 		#REMOVE THIS WHEN DEBUG OVER
 		if name == 'reset':
-			curs.execute('TRUNCATE TABLE users;')
-			conn.commit()
+			reset_table()
 			return render_template('register.html')
 
 		confirm=request.form.get("confirm")
