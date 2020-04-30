@@ -1,0 +1,45 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<style type="text/css">
+.wrapper {
+  text-align: center;
+  display: inline-block;
+  left: 50%;
+}
+.btn-group-xs > .btn, .btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
+}
+</style>
+<h3 style="color: white;">View the club squad</h3>
+<div class="wrapper">
+	<a type="button" class="btn-sm btn-light" {% if n==0 %} href="/viewsquad/{{ n }}" {% else %} href="/viewsquad/{{ n-1 }}" {% endif %}>Previous Page</a>
+	<a type="button" class="btn-sm btn-light" {% if p|length == 0 %} href="/viewsquad/{{ n }}" {% else %} href="/viewsquad/{{ n+1 }}"{% endif %}>Next Page</a>
+</div>
+<hr>
+<table class="table table-light table-striped table-hover" >
+	<thead>
+		<tr>
+	      <th scope="col">Shirt Number</th>
+	      <th scope="col">Name</th>
+	      <th scope="col">Nickname</th>
+	      <th scope="col">Team</th>
+	    </tr>
+	</thead>
+	<tbody>
+		{% for p in players %}
+			<tr>
+				<th scope="row">{{ p[3] }}</th>
+				<td >{{ p[1] }}</td>
+				<td>{{ p[2] }}</td>
+				<td>{{ p[4] }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+
+</table>
+<p style="color: white;">You are on page {{ n }}</p>
+{% endblock %}

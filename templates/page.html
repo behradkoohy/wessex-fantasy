@@ -16,11 +16,18 @@
 	<title>Wessex Fantasy Hockey</title>
 	<nav class="navbar navbar-light" style="background-color: #800000;">
   		<a class="navbar-brand" style="color:white; " href="/">Fantasy Hockey</a>
+	  	{% if current_user.is_authenticated %}
 	  	<ul class="navbar-nav mr-auto" style="color: white;">
 	  		<li style="color: white;" class="nav-item">
 	  			<a class="nav-link" style="color: white;" href="/addplayer">Add Player</a>
 	  		</li>
 	  	</ul>
+	  	<ul class="navbar-nav mr-auto" style="color: white;">
+	  		<li style="color: white;" class="nav-item">
+	  			<a class="nav-link" style="color: white;" href="/viewsquad/0">View Squad</a>
+	  		</li>
+	  	</ul>
+	  	{% endif %}
 	  	<ul class="navbar-nav mr-auto" style="color: white;">
 	  		<li style="color: white;" class="nav-item">
 	  			<a class="nav-link" style="color: white;" href="/login">Login</a>

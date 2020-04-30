@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import psycopg2
 from models import User
-
+from PageResult import PageResult
 
 
 
@@ -176,6 +176,7 @@ def login():
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
+		curs = conn.cursor()
 		curs.execute("SELECT email, password_hash, name, user_id FROM users WHERE email = %s;", (email, ))
 		account = curs.fetchone()
 		if account is not None:
@@ -190,6 +191,32 @@ def login():
 		else:
 			flash('Incorrect username or password', 'danger')
 	return render_template('login.html')
+
+
+
+
+@app.route('/viewsquad/<pagenum>')
+def displayitems(pagenum):
+	curs = conn.cursor()
+	offset = int(pagenum) * 11
+	limit = 11
+	print(offset, limit)
+	curs.execute("""SELECT player_details.player_id, 
+							player_details.name, 
+							player_details.nickname, 
+							player_details.shirt_number, 
+							teams.name 
+							FROM 
+							player_details INNER JOIN teams 
+							ON 
+							teams.team_id = player_details.team_id 
+							ORDER BY 
+							shirt_number 
+							LIMIT %s OFFSET %s"""
+							, (limit, offset))
+	result = curs.fetchall()
+	return render_template('list_players.html', players = result, n=int(pagenum))
+
 
 @app.route('/logout')
 def logout():
