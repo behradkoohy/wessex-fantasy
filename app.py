@@ -25,8 +25,8 @@ conn = psycopg2.connect(
 	password = password,
 	host = hostname
 )
-
-
+conn.autocommit = True
+curs = conn.cursor()
 
 
 
