@@ -1,0 +1,20 @@
+{% extends 'page.html' %}
+{% block content %}
+<style type="text/css">
+h3 {color: white;}
+h4 {color: white;}
+h5 {color: white;}
+h6 {color: white;}
+</style>
+<h3>Player Details<h3>
+<div>
+	<h4> {{ details['name'] }} </h4>
+	{% if details['nickname'] != '' %}
+	<h5>Also known as {{ details['nickname'] }}</h5>
+	{% endif %}
+	<h5>Player Position</h5>
+	<h5>Player Number</h5>
+	<h5>Player Team</h5>
+</div>
+
+{% endblock %}

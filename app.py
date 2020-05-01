@@ -11,6 +11,7 @@ from models import User
 
 
 wessex_teams = ['1st XI', '2nd XI', '3rd XI', '4th XI', '5th XI (Development Squad)']
+positions = ['Forward', 'Midfield', 'Defence', ]
 
 # Connecting to the database
 result = urlparse(os.environ['DATABASE_URL'])
@@ -52,6 +53,9 @@ curs.execute("""CREATE TABLE IF NOT EXISTS users
 							name TEXT NOT NULL);
 							""")
 conn.commit()
+# curs.execute("""CREATE TABLE IF NOT EXISTS user_details
+
+# 	""")
 # Adding teams to the teams db
 for x, t in enumerate(wessex_teams):
 	curs = conn.cursor()
@@ -104,10 +108,6 @@ def add_player_page():
 	pass_through['teams']=teams_retrieved
 
 	if request.method == 'GET':
-		
-
-		# pass_through['teams']
-
 		return render_template('add_player.html', data=pass_through)
 	elif request.method == 'POST':
 		# [('playername', 'Mikey Gimson'), ('playername', '6'), ('playerteam', '1st XI'), ('playerpos', 'Forward')])
@@ -204,9 +204,8 @@ def login():
 
 
 
-
 @app.route('/viewsquad/<pagenum>')
-def displayitems(pagenum):
+def displaysquad(pagenum):
 	curs = conn.cursor()
 	offset = int(pagenum) * 11
 	limit = 11
@@ -226,6 +225,32 @@ def displayitems(pagenum):
 							, (limit, offset))
 	result = curs.fetchall()
 	return render_template('list_players.html', players = result, n=int(pagenum))
+
+@app.route('/player/<pid>')
+def playerdetails(pid):
+	curs.execute(""" SELECT player_details.name, 
+							player_details.nickname, 
+							player_details.shirt_number, 
+							teams.name 
+							FROM 
+							player_details INNER JOIN teams 
+							ON 
+							teams.team_id = player_details.team_id
+							WHERE
+							player_details.player_id = %s;
+		""", (pid, ))
+	player_details = curs.fetchone()
+
+	titles = {
+		0:'name', 
+		1:'nickname', 
+		2:'shirt_number', 
+		3:'team'
+	}
+
+	passthrough_player_details = {titles[key]: player_details[key] for key in titles}
+	return render_template('player_page.html', details=passthrough_player_details)
+	return jsonify(passthrough_player_details)
 
 
 @app.route('/logout')
