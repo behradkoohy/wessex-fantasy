@@ -24,9 +24,6 @@ conn.autocommit = True
 curs = conn.cursor()
 
 
-
-
-
 @user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
 	curs = conn.cursor()

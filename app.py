@@ -8,7 +8,7 @@ import psycopg2
 from models import User
 from players import players_blueprint
 from user import user_blueprint
-
+from fixtures import fixtures_blueprint
 
 
 wessex_teams = ['1st XI', '2nd XI', '3rd XI', '4th XI', '5th XI (Development Squad)']
