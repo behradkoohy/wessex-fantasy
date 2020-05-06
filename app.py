@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify, flash, url_for, session, logging, redirect
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
-from views import frontpage
 from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -60,6 +59,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS users
 							name TEXT NOT NULL);
 							""")
 conn.commit()
+
 # curs.execute("""CREATE TABLE IF NOT EXISTS user_details
 
 # 	""")
