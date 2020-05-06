@@ -7,6 +7,7 @@ import os
 import psycopg2
 from models import User
 from players import players_blueprint
+from user import user_blueprint
 
 
 
@@ -78,6 +79,7 @@ for x, t in enumerate(positions):
 app = Flask(__name__, template_folder='templates')
 app.secret_key = os.environ['SECRET_KEY']
 app.register_blueprint(players_blueprint)
+app.register_blueprint(user_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -109,8 +111,6 @@ def frontpage():
 
 
 
-
-
 def reset_table():
 	curs = conn.cursor()
 	curs.execute('DROP TABLE users;')
@@ -123,59 +123,6 @@ def reset_table():
 							""")
 	conn.commit()
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-	curs = conn.cursor()
-	if request.method == "POST":
-		name=request.form.get("name")
-		email=request.form.get("email")
-		password=request.form.get("password")
-		if len(password) <= 6:
-			flash('Password needs to be greater than 6 characters please.', 'danger')
-			return render_template('register.html')
-		#REMOVE THIS WHEN DEBUG OVER
-		if name == 'reset':
-			reset_table()
-			return render_template('register.html')
-
-		confirm=request.form.get("confirm")
-		if password != confirm:
-			flash('Please double check your passwords match', 'danger')
-			return render_template('register.html')
-		hashed_password = generate_password_hash(password)
-		curs.execute("SELECT email FROM users WHERE email = %s;", (email, ))
-		matching_emails = curs.fetchone()
-		if matching_emails is not None:
-			flash('This email is already registered, please talk to behrad if you can\'t log on.', 'danger')
-		else:
-			curs.execute("INSERT INTO users (email, password_hash, name) VALUES (%s, %s, %s);", (email, hashed_password, name))
-			conn.commit()
-			flash('Successfully registered account.', 'success')
-	return render_template('register.html')
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-	if request.method == 'POST':
-		email = request.form['email']
-		password = request.form['password']
-		curs = conn.cursor()
-		curs.execute("SELECT email, password_hash, name, user_id FROM users WHERE email = %s;", (email, ))
-		account = curs.fetchone()
-		if account is not None:
-			if check_password_hash(account[1], password):
-				user = user_loader_email(account[0])
-				print('logging in:',user)
-				login_user(user)
-				print(user)
-				return redirect(request.args.get('next') or url_for('frontpage'))
-			else:
-				flash('Incorrect username or password', 'danger')
-		else:
-			flash('Incorrect username or password', 'danger')
-	return render_template('login.html')
-
-
 
 @app.route('/viewsquad/<pagenum>')
 def displaysquad(pagenum):
@@ -187,11 +134,18 @@ def displaysquad(pagenum):
 							player_details.name, 
 							player_details.nickname, 
 							player_details.shirt_number, 
+							positions.position_name,
 							teams.name 
 							FROM 
-							player_details INNER JOIN teams 
+							player_details 
+							INNER JOIN 
+							teams 
 							ON 
 							teams.team_id = player_details.team_id 
+							INNER JOIN
+							positions
+							ON
+							player_details.position_id = positions.position_id
 							ORDER BY 
 							shirt_number 
 							LIMIT %s OFFSET %s"""
@@ -199,38 +153,6 @@ def displaysquad(pagenum):
 	result = curs.fetchall()
 	return render_template('list_players.html', players = result, n=int(pagenum))
 
-@app.route('/player/<pid>')
-def playerdetails(pid):
-	curs.execute(""" SELECT player_details.name, 
-							player_details.nickname, 
-							player_details.shirt_number,
-							position.position_name 
-							teams.name 
-							FROM 
-							player_details 
-							INNER JOIN 
-							teams 
-							ON 
-							teams.team_id = player_details.team_id
-							INNER JOIN 
-							positions 
-							ON
-							player_details.position_id = positions.position_id
-							WHERE
-							player_details.player_id = %s;
-		""", (pid, ))
-	player_details = curs.fetchone()
-
-	titles = {
-		0:'name', 
-		1:'nickname', 
-		2:'shirt_number', 
-		3:'team'
-	}
-
-	passthrough_player_details = {titles[key]: player_details[key] for key in titles}
-	return render_template('player_page.html', details=passthrough_player_details)
-	return jsonify(passthrough_player_details)
 
 
 @app.route('/logout')

@@ -14,7 +14,7 @@
   border-radius: .2rem;
 }
 </style>
-<h3 style="color: white;">View the club squad</h3>
+<h3 style="color: white;">View the Club Squad</h3>
 <div class="wrapper">
 	<a type="button" class="btn-sm btn-light" {% if n > 0 %}  href="/viewsquad/{{ n-1 }}" {% endif %}>Previous Page</a>
 	<a type="button" class="btn-sm btn-light" {% if players|length == 11 %} href="/viewsquad/{{ n+1 }}"{% endif %}>Next Page</a>
@@ -26,6 +26,7 @@
 	      <th scope="col">Shirt Number</th>
 	      <th scope="col">Name</th>
 	      <th scope="col">Nickname</th>
+	      <th scope="col">Position</th>
 	      <th scope="col">Team</th>
 	    </tr>
 	</thead>
@@ -36,6 +37,7 @@
 				<td ><a href="/player/{{p[0]}}"> {{ p[1] }}</a></td>
 				<td>{{ p[2] }}</td>
 				<td>{{ p[4] }}</td>
+				<td>{{ p[5] }}</td>
 			</tr>
 		{% endfor %}
 	</tbody>
