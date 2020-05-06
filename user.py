@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import psycopg2
+from models import User
 
 
 user_blueprint = Blueprint("users", __name__)
