@@ -2,7 +2,6 @@ from flask import Blueprint, request,render_template, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import user_loader_email
 import os
 import psycopg2
 
@@ -25,6 +24,14 @@ conn = psycopg2.connect(
 conn.autocommit = True
 curs = conn.cursor()
 
+def user_loader_email(email):
+	curs = conn.cursor()
+	curs.execute("SELECT user_id, name, email, password_hash FROM users WHERE email = %s;", (email, ))
+	matching_emails = curs.fetchone()
+	if matching_emails is not None:
+		u = matching_emails
+		user = User(u[0], u[1], u[2], u[3])
+		return user
 
 @user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
