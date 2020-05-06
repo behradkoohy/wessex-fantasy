@@ -7,6 +7,26 @@ import psycopg2
 
 user_blueprint = Blueprint("users", __name__)
 
+# Connecting to the database
+result = urlparse(os.environ['DATABASE_URL'])
+username = result.username
+password = result.password
+database = result.path[1:]
+hostname = result.hostname
+
+conn = psycopg2.connect(
+	database = database,
+	user = username,
+	password = password,
+	host = hostname
+)
+conn.autocommit = True
+curs = conn.cursor()
+
+
+
+
+
 @user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
 	curs = conn.cursor()
