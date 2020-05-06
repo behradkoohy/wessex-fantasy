@@ -43,7 +43,6 @@ curs.execute("""CREATE TABLE IF NOT EXISTS positions
 							position_name varchar);
 						""")
 conn.commit()
-curs.execute("""DROP TABLE player_details;""")
 curs.execute("""CREATE TABLE IF NOT EXISTS player_details 
 							(player_id serial PRIMARY KEY, 
 							name varchar NOT NULL, 
