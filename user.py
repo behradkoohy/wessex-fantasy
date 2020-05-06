@@ -2,6 +2,7 @@ from flask import Blueprint, request,render_template, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash, check_password_hash
+from app import user_loader, user_loader_email
 import os
 import psycopg2
 
