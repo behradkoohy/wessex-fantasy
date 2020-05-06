@@ -29,6 +29,9 @@ def add_player_page():
 	curs.execute('SELECT name FROM teams;')
 	teams_retrieved = [t[0] for t in curs.fetchall()]
 	pass_through['teams']=teams_retrieved
+	curs.execute('SELECT position_name FROM positions;')
+	positions_retrieved = [t[0] for t in curs.fetchall()]
+	pass_through['positions'] = positions_retrieved
 
 	if request.method == 'GET':
 		return render_template('add_player.html', data=pass_through)
@@ -52,11 +55,13 @@ def add_player_page():
 		else:
 			curs.execute("SELECT team_id FROM teams WHERE name = %s ;", (team, ))
 			team_id = curs.fetchone()[0]
+			curs.execute("SELECT position_id FROM positions WHERE position_name = %s ;", (position, ))
+			position_id = curs.fetchone()[0]
 			try:
-				curs.execute("INSERT INTO player_details (name, nickname, shirt_number, team_id) VALUES (%s, %s, %s, %s);",(name, nickname, shirt_number, team_id))
+				curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id) VALUES (%s, %s, %s, %s, %s);",(name, nickname, shirt_number, position_id, team_id))
 				conn.commit()
 			except Exception as e:
-				flash('Error while adding player','danger')
+				flash('Error while adding player' + str(e),'danger')
 			else:
 				flash(message, 'success')
 		return render_template('add_player.html', data=pass_through)

@@ -11,7 +11,7 @@ from players import players_blueprint
 
 
 wessex_teams = ['1st XI', '2nd XI', '3rd XI', '4th XI', '5th XI (Development Squad)']
-positions = ['Forward', 'Midfield', 'Defence', ]
+positions = ['Forward', 'Midfield', 'Defence', 'Goalkeeper']
 
 # Connecting to the database
 result = urlparse(os.environ['DATABASE_URL'])
@@ -38,11 +38,18 @@ curs.execute("""CREATE TABLE IF NOT EXISTS teams
 							name varchar);
 						""")
 conn.commit()
+curs.execute("""CREATE TABLE IF NOT EXISTS positions
+							(position_id serial PRIMARY KEY,
+							position_name varchar);
+						""")
+conn.commit()
+curs.execute("""DROP TABLE player_details;""")
 curs.execute("""CREATE TABLE IF NOT EXISTS player_details 
 							(player_id serial PRIMARY KEY, 
 							name varchar NOT NULL, 
 							nickname varchar,
-							shirt_number int, 
+							shirt_number int,
+							position_id serial REFERENCES positions (position_id),
 							team_id serial REFERENCES teams (team_id));
 						""")
 conn.commit()
@@ -62,6 +69,10 @@ for x, t in enumerate(wessex_teams):
 	curs.execute("INSERT INTO teams (name) SELECT (%s) WHERE NOT EXISTS (SELECT name FROM teams WHERE name = %s);", (t, t))
 	conn.commit()
 
+for x, t in enumerate(positions):
+	curs = conn.cursor()
+	curs.execute("INSERT INTO positions (position_name) SELECT (%s) WHERE NOT EXISTS (SELECT position_name FROM positions WHERE position_name = %s);", (t, t))
+	conn.commit()
 
 # start the website and set up the secret key
 # key is already set up on the heroku
@@ -193,12 +204,19 @@ def displaysquad(pagenum):
 def playerdetails(pid):
 	curs.execute(""" SELECT player_details.name, 
 							player_details.nickname, 
-							player_details.shirt_number, 
+							player_details.shirt_number,
+							position.position_name 
 							teams.name 
 							FROM 
-							player_details INNER JOIN teams 
+							player_details 
+							INNER JOIN 
+							teams 
 							ON 
 							teams.team_id = player_details.team_id
+							INNER JOIN 
+							positions 
+							ON
+							player_details.position_id = positions.position_id
 							WHERE
 							player_details.player_id = %s;
 		""", (pid, ))
