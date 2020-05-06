@@ -16,8 +16,8 @@
 </style>
 <h3 style="color: white;">View the club squad</h3>
 <div class="wrapper">
-	<a type="button" class="btn-sm btn-light" {% if n==0 %} href="/viewsquad/{{ n }}" {% else %} href="/viewsquad/{{ n-1 }}" {% endif %}>Previous Page</a>
-	<a type="button" class="btn-sm btn-light" {% if players|length == 0 %} href="/viewsquad/{{ n }}" {% else %} href="/viewsquad/{{ n+1 }}"{% endif %}>Next Page</a>
+	<a type="button" class="btn-sm btn-light" {% if n > 0 %}  href="/viewsquad/{{ n-1 }}" {% endif %}>Previous Page</a>
+	<a type="button" class="btn-sm btn-light" {% if players|length == 11 %} href="/viewsquad/{{ n+1 }}"{% endif %}>Next Page</a>
 </div>
 <hr>
 <table class="table table-light table-striped table-hover" >
