@@ -7,6 +7,7 @@ import psycopg2
 from models import User
 from players import players_blueprint
 from user import user_blueprint
+from fixtures import fixtures_blueprint
 # from fixtures import fixtures_blueprint
 
 
@@ -78,8 +79,10 @@ for x, t in enumerate(positions):
 # key is already set up on the heroku
 app = Flask(__name__, template_folder='templates')
 app.secret_key = os.environ['SECRET_KEY']
+
 app.register_blueprint(players_blueprint)
 app.register_blueprint(user_blueprint)
+app.register_blueprint(fixtures_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
