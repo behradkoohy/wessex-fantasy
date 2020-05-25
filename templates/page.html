@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<style type="text/css">
-
-
-
-</style>
 <html>
 <head>
+	<link rel="stylesheet" href="{{ url_for('static',filename='styles/styles.css') }}"  type="text/css">
 	<!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -50,7 +46,7 @@
 	  	</ul>
 	</nav>
 
-
+	
 </head>
 
 <div style="margin: auto; width: 75%; padding: 10px">
@@ -69,6 +65,7 @@
 
 
 <body style="background-color: #0a1a2d; ">
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/styles.css') }}" type="text/css">
 <div style="margin: auto; width: 75%; padding: 10px">
 {% block content %}
 {% endblock %}

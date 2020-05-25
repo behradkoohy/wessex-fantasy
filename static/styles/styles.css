@@ -1,0 +1,20 @@
+@charset "UTF-8";
+footer {color: white;}
+label {color: white;}
+h3 {color: white;}
+h4 {color: white;}
+h5 {color: white;}
+h6 {color: white;}
+p {color: white;}
+body {color: white !important; }
+.wrapper {
+  text-align: center;
+  display: inline-block;
+  left: 50%;
+}
+.btn-group-xs > .btn, .btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
+}

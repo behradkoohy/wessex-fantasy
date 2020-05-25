@@ -2,14 +2,11 @@
 
 {% block content %}
 
-<style type="text/css">
-h3 {color: white;}
-footer {color: white;}
 
-</style>
 <h3>Work in progress, come back soon. </h3>
 {% if current_user.is_authenticated %}
-Hi {{ current_user.name }}!
+<h6>Hi {{ current_user.name }}!</h6>
 {% endif %}
 <footer>damage and baz xoxo</footer>
+
 {% endblock %}
