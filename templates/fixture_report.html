@@ -4,24 +4,77 @@
 
 {% block content %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css" />
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.14/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 
 <div>
 <h3>Report a fixture</h3>
-<form>
+<form method="post">
+	<!-- TEAM SELECT -->
+	<div class="form-group">
+		<label for="team_select">Team:</label>
+		<select id="team_select" name="team" class="selectpicker w-100" data-live-search="true" title="Please select the team">
+			{% for p in data['teams'] %}
+				<option value="{{ p['id'] }}" data-tokens="{{ p['data_tokens'] }}">{{ p['name'] }}</option>
+			{% endfor %}
+		</select>
+	</div>
 	<!-- PLAYER SELECT -->
 	<div class="form-group">
-		<label for="player_select"></label>
-		<select id="player_select" name="players" class="selectpicker" data-live-search="true" multiple>
+		<label for="player_select">Players:</label>
+		<select id="player_select" name="players" class="selectpicker w-100" data-live-search="true" multiple title="Please select the players who played">
 			{% for p in data['players'] %}
 				<option value="{{ p['id'] }}" data-tokens="{{ p['data_tokens'] }}">{{ p['name'] }}</option>
 			{% endfor %}
 		</select>
 	</div>
+	<input type="hidden" name="players_selected" id="players_selected">
+	<div class="form-group">
+			<label for="wessexGoals">Number of Goals Scored by Wessex</label>
+			<input type="wessexGoals" name="wessexGoals" class="form-control" id="wessexGoals">
+	</div>
+	<div class="form-group">
+			<label for="oppGoals">Number of Goals Scored by Opposition</label>
+			<input type="oppGoals" name="oppGoals" class="form-control" id="oppGoals">
+	</div>
+	<div class="form-group">
+		<label for="opp_select">Opposition Team:</label>
+		<select id="opp_select" name="opp" class="selectpicker w-100" data-live-search="true" title="Please select the team">
+			{% for p in data['opps'] %}
+				<option value="{{ p['id'] }}" data-tokens="{{ p['data_tokens'] }}">{{ p['name'] }}</option>
+			{% endfor %}
+		</select>
+	</div>
+    <div class="form-group">
+    	<label for="fixturedate">Date of Fixture</label>
+        <div class="input-group date" id="fixturedate" data-target-input="nearest">
+            <input name="fixture_date" type="text" class="form-control datetimepicker-input" data-target="#fixturedate"/>
+            <div class="input-group-append" data-target="#fixturedate" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('#fixturedate').datetimepicker({
+                format: 'L'
+            });
+        });
+    </script>
+	<button type="submit" class="btn btn-primary" method="post">Submit</button>
 </form>
 </div>
+
+<script type="text/javascript">
+console.log($('#player_select'));
+$('#player_select').change(function() {
+	$('#players_selected').val($(this).val());
+});
+
+</script>
 
 {% endblock %} 

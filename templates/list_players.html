@@ -14,13 +14,17 @@
   border-radius: .2rem;
 }
 </style>
-<h3 style="color: white;">View the Club Squad</h3>
-<div class="wrapper">
-	<a type="button" class="btn-sm btn-light" {% if n > 0 %}  href="/viewsquad/{{ n-1 }}" {% endif %}>Previous Page</a>
-	<a type="button" class="btn-sm btn-light" {% if players|length == 11 %} href="/viewsquad/{{ n+1 }}"{% endif %}>Next Page</a>
+<h3>View the Club Squad</h3>
+<div class="wrapper" style="float: bottom;">
+	{% if n > 0 %}
+	<a role="button" class="btn btn-primary" href="/viewsquad/{{ n-1 }}" >Previous Page</a>
+	{% endif %}
+	{% if players|length == 11 %}
+	<a role="button" class="btn btn-primary" href="/viewsquad/{{ n+1 }}">Next Page</a>
+	{% endif %}
 </div>
-<hr>
-<table class="table table-light table-striped table-hover" >
+
+<table class="table table-striped table-hover" >
 	<thead>
 		<tr>
 	      <th scope="col">Shirt Number</th>

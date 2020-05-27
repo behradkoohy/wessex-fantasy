@@ -13,6 +13,7 @@ from fixtures import fixtures_blueprint
 
 wessex_teams = ['1st XI', '2nd XI', '3rd XI', '4th XI', '5th XI (Development Squad)']
 positions = ['Forward', 'Midfield', 'Defence', 'Goalkeeper']
+test_teams = ['team1', 'team2', 'team3']
 
 # Connecting to the database
 result = urlparse(os.environ['DATABASE_URL'])
@@ -58,9 +59,22 @@ curs.execute("""CREATE TABLE IF NOT EXISTS users
 							email TEXT NOT NULL UNIQUE,
 							password_hash TEXT NOT NULL,
 							name TEXT NOT NULL);
-							""")
+						""")
 conn.commit()
-
+curs.execute("""CREATE TABLE IF NOT EXISTS opposition_teams
+							(team_id serial PRIMARY KEY,
+							name varchar);
+						""")
+conn.commit()
+curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_team
+							(fixture_id serial PRIMARY KEY,
+							team_id int REFERENCES teams (team_id),
+							opp_id int REFERENCES opposition_teams (team_id),
+							players varchar,
+							wessex_goals int,
+							opposition_goals int,
+							fixture_date date);
+						""")
 # curs.execute("""CREATE TABLE IF NOT EXISTS user_details
 
 # 	""")
@@ -73,6 +87,11 @@ for x, t in enumerate(wessex_teams):
 for x, t in enumerate(positions):
 	curs = conn.cursor()
 	curs.execute("INSERT INTO positions (position_name) SELECT (%s) WHERE NOT EXISTS (SELECT position_name FROM positions WHERE position_name = %s);", (t, t))
+	conn.commit()
+
+for x, t in enumerate(test_teams):
+	curs = conn.cursor()
+	curs.execute("INSERT INTO opposition_teams (name) SELECT (%s) WHERE NOT EXISTS (SELECT name FROM opposition_teams WHERE name = %s);", (t, t))
 	conn.commit()
 
 # start the website and set up the secret key
@@ -155,6 +174,7 @@ def displaysquad(pagenum):
 							, (limit, offset))
 	result = curs.fetchall()
 	return render_template('list_players.html', players = result, n=int(pagenum))
+
 
 
 

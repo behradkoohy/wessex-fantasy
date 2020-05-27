@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="{{ url_for('static',filename='styles/styles.css') }}"  type="text/css">
+	<link rel="stylesheet" href="{{ url_for('static',filename='styles/light-mode.css') }}"  type="text/css">
 	<!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,8 +28,13 @@
 	  			<a class="nav-link" style="color: white;" href="/viewsquad/0">View Squad</a>
 	  		</li>
 	  	</ul>
-	  	{% endif %}
 	  	<ul class="navbar-nav mr-auto" style="color: white;">
+	  		<li style="color: white;" class="nav-item">
+	  			<a class="nav-link" style="color: white;" href="/logout">Log out</a>
+	  		</li>
+	  	</ul>
+	  	{% else %}
+		<ul class="navbar-nav mr-auto" style="color: white;">
 	  		<li style="color: white;" class="nav-item">
 	  			<a class="nav-link" style="color: white;" href="/login">Login</a>
 	  		</li>
@@ -39,11 +44,9 @@
 	  			<a class="nav-link" style="color: white;" href="/register">Register</a>
 	  		</li>
 	  	</ul>
-	  	<ul class="navbar-nav mr-auto" style="color: white;">
-	  		<li style="color: white;" class="nav-item">
-	  			<a class="nav-link" style="color: white;" href="/logout">Log out</a>
-	  		</li>
-	  	</ul>
+	  	{% endif %}
+	  	
+
 	</nav>
 
 	
@@ -64,8 +67,8 @@
 </div>
 
 
-<body style="background-color: #0a1a2d; ">
-<link rel="stylesheet" href="{{ url_for('static',filename='styles/styles.css') }}" type="text/css">
+<body>
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/light-mode.css') }}" type="text/css">
 <div style="margin: auto; width: 75%; padding: 10px">
 {% block content %}
 {% endblock %}
