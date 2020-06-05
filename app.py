@@ -75,9 +75,25 @@ curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_team
 							opposition_goals int,
 							fixture_date date);
 						""")
-# curs.execute("""CREATE TABLE IF NOT EXISTS user_details
+conn.commit()
+curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_individual
+							(player_id int REFERENCES player_details (player_id),
+							fixture_id int REFERENCES fixtures_team (fixture_id),
+							goals int,
+							d_flicks int,
+							assists int,
+							greens int,
+							yellows int,
+							reds int,
+							p_flicks_scored int,
+							p_flicks_missed int,
+							p_flicks_awarded int,
+							wasMidOrDef boolean,
+							gkgoals_conc int,
+							PRIMARY KEY(player_id, fixture_id));
+						""")
+conn.commit()
 
-# 	""")
 # Adding teams to the teams db
 for x, t in enumerate(wessex_teams):
 	curs = conn.cursor()
@@ -93,6 +109,7 @@ for x, t in enumerate(test_teams):
 	curs = conn.cursor()
 	curs.execute("INSERT INTO opposition_teams (name) SELECT (%s) WHERE NOT EXISTS (SELECT name FROM opposition_teams WHERE name = %s);", (t, t))
 	conn.commit()
+	
 
 # start the website and set up the secret key
 # key is already set up on the heroku

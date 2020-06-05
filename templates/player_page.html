@@ -6,13 +6,79 @@
 	{% if details['nickname'] != '' %}
 		<h6>Also known as {{ details['nickname'] }}</h6>
 	{% endif %}
-	<h5>Player Position: {{ details['position_name'] }}</h5>
-	<h5>Player Number: {{ details['shirt_number'] }}</h5>
-	<h5>Player Team: {{ details['team'] }}</h5>
+	<h6>Player Position: {{ details['position_name'] }}</h6>
+	<h6>Player Number: {{ details['shirt_number'] }}</h6>
+	<h6>Player Team: {{ details['team'] }}</h6>
 </div>
-<hr>
-<div>
-<h4> Points Record: coming soon </h4>
 
+<div>
+<h4> Points Record </h4>
+<table class="table table-hover table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Opposition</th>
+      <th scope="col">Score</th>
+      <th scope="col">Goals Scored</th>
+      <th scope="col">Assists</th>
+      <th scope="col">Position</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in fix_info %}
+    	<tr class="clickable-row" data-href="{{ loop.index }}">
+    		<th scope="row">
+    			<button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#info{{ loop.index}}"> 	{{ f['fixture_date'] }} 
+    			</button>
+    		</th>
+    		<td>{{ f['name'] }}</td>
+    		<td>{{ f['wessex_goals'] }} - {{ f['opposition_goals'] }}</td>
+    		<td>{{ f['goals'] + f['d_flicks'] + f['p_flicks_scored'] }} </td>
+    		<td>{{ f['assists'] }}</td>
+    		<td>{% if f['wasmidordef'] %} Mid/Def/GK {% else %} Fwd {% endif %}</td>
+    	</tr>
+    {% endfor %}
+  </tbody>
+</table>
 </div>
+{% for f in fix_info %}
+	<div class="modal fade" id="info{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Report Card for {{details['name']}}</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <ul>
+	        	<b> Fixture vs {{ f['name'] }} on {{ f['fixture_date'] }} </b>
+	        	<br>
+	        	<b>Game outcome: {{ f['wessex_goals'] }} - {{ f['opposition_goals'] }}</b>
+	        	<hr>
+	        	<h6>Goals and assists</h6>
+	        	<li> Goals from Open Play: {{ f['goals'] }} </li>
+	        	<li> Goals from Drag Flicks: {{ f['d_flicks'] }} </li>
+	        	<li> Goals from Penalty Flicks: {{ f['p_flicks_scored'] }} </li>
+	        	<li> Missed Penalty Flicks: {{ f['p_flicks_missed'] }}</li>
+	        	<li> Assists: {{ f['assists'] }}</li>
+	        	<hr>
+	        	<h6>Cards</h6>
+	        	<li> Red Cards: {{ f['reds'] }}</li>
+	        	<li> Yellow Cards: {{ f['yellows'] }}</li>
+	        	<li> Green Cards: {{ f['greens'] }}</li>
+	        	<hr>
+	        	<h6>Defensive and Goalkeeper Statistics</h6>
+	        	<li> Penalty Flicks Conceded: {{ f['p_flicks_awarded'] }}</li>
+	        	<li> (GK/Def Only) Goals Conceded: {{ f['gkgoals_conc'] }}</li>
+	        </ul>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{% endfor %}
 {% endblock %}

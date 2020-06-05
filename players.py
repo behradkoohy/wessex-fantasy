@@ -1,4 +1,4 @@
-from flask import Blueprint, request,render_template, flash
+from flask import Blueprint, request,render_template, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from urllib.parse import urlparse
 import os
@@ -19,6 +19,31 @@ conn = psycopg2.connect(
 )
 conn.autocommit = True
 curs = conn.cursor()
+
+def calculatePoints(goals, dflicks, assists, greens, yellows, reds, pens_scored, pens_missed, pens_given_away, wasMidOrDef, gk_goals):
+	totalp = 0
+	if wasMidOrDef:
+		totalp += (goals * 0)
+		totalp += (dflicks * 0)
+		totalp += (assists * 0)
+		totalp += (greens * 0)
+		totalp += (yellows * 0)
+		totalp += (reds * 0)
+		totalp += (pens_scored * 0)
+		totalp += (pens_missed * 0)
+		totalp += (pens_given_away * 0)
+		totalp += (gk_goals * 0)
+	else:
+		totalp += (goals * 0)
+		totalp += (dflicks * 0)
+		totalp += (assists * 0)
+		totalp += (greens * 0)
+		totalp += (yellows * 0)
+		totalp += (reds * 0)
+		totalp += (pens_scored * 0)
+		totalp += (pens_missed * 0)
+		totalp += (pens_given_away * 0)
+	return totalp
 
 
 @players_blueprint.route('/addplayer', methods=['GET', 'POST'])
@@ -98,5 +123,38 @@ def playerdetails(pid):
 	}
 
 	passthrough_player_details = {titles[key]: player_details[key] for key in titles}
-	return render_template('player_page.html', details=passthrough_player_details)
-	return jsonify(passthrough_player_details)
+
+	curs.execute("""SELECT fixtures_individual.*, 
+		fixtures_team.fixture_date,
+		fixtures_team.wessex_goals,
+		fixtures_team.opposition_goals,
+		opposition_teams.name
+		FROM 
+		fixtures_individual 
+		INNER JOIN  
+		fixtures_team 
+		ON 
+		fixtures_individual.fixture_id = fixtures_team.fixture_id
+		INNER JOIN
+		opposition_teams
+		ON
+		fixtures_team.opp_id = opposition_teams.team_id
+		WHERE 
+		fixtures_individual.player_id = %s;
+		""", (pid, ))
+
+	colnames = [desc[0] for desc in curs.description]
+	colnames = {x : y for x,y in enumerate(colnames)}
+
+	p_fix_info = curs.fetchall()
+	p_fix_info_reorg = []
+	for p in p_fix_info:
+		p_fix_info_reorg.append({colnames[key]: p[key] for key in colnames})
+
+
+
+	# return jsonify(p_fix_info_reorg
+
+
+	return render_template('player_page.html', details=passthrough_player_details, fix_info=p_fix_info_reorg)
+
