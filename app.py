@@ -25,7 +25,7 @@ hostname = result.hostname
 conn = psycopg2.connect(
 	database = database,
 	user = username,
-	password = password,
+	#password = password,
 	host = hostname
 )
 conn.autocommit = True
@@ -50,6 +50,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS player_details
 							name varchar NOT NULL, 
 							nickname varchar,
 							shirt_number int,
+							value money NOT NULL,
 							position_id serial REFERENCES positions (position_id),
 							team_id serial REFERENCES teams (team_id));
 						""")
@@ -93,6 +94,31 @@ curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_individual
 							PRIMARY KEY(player_id, fixture_id));
 						""")
 conn.commit()
+curs.execute("""CREATE VIEW player_details_full AS
+				SELECT
+					player_details.player_id,
+					player_details.name,
+					player_details.nickname,
+					player_details.shirt_number,
+					player_details.value,
+					teams.team_id,
+					teams.name AS "team_name",
+					positions.position_id,
+					positions.position_name AS "position"
+				FROM player_details
+					INNER JOIN 
+					teams
+					ON
+					teams.team_id = player_details.team_id
+					INNER JOIN
+					positions
+					ON
+					positions.position_id = player_details.position_id
+				;
+				 """)
+conn.commit()
+
+
 
 # Adding teams to the teams db
 for x, t in enumerate(wessex_teams):

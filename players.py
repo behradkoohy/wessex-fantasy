@@ -45,6 +45,19 @@ def calculatePoints(goals, dflicks, assists, greens, yellows, reds, pens_scored,
 		totalp += (pens_given_away * 0)
 	return totalp
 
+def add_player_helper(name, shirt_number, team, position, nickname=""):
+	curs.execute("SELECT team_id FROM teams WHERE name = %s ;", (team, ))
+	team_id = curs.fetchone()[0]
+	curs.execute("SELECT position_id FROM positions WHERE position_name = %s ;", (position, ))
+	position_id = curs.fetchone()[0]
+
+	try:
+		curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id) VALUES (%s, %s, %s, %s, %s);",(name, nickname, shirt_number, position_id, team_id))
+		conn.commit()
+	except Exception as e:
+		return False
+	else:
+		return True
 
 @players_blueprint.route('/addplayer', methods=['GET', 'POST'])
 @login_required
@@ -78,16 +91,8 @@ def add_player_page():
 			conn.commit()
 			# reset the DB when this is passed
 		else:
-			curs.execute("SELECT team_id FROM teams WHERE name = %s ;", (team, ))
-			team_id = curs.fetchone()[0]
-			curs.execute("SELECT position_id FROM positions WHERE position_name = %s ;", (position, ))
-			position_id = curs.fetchone()[0]
-
-			try:
-				curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id) VALUES (%s, %s, %s, %s, %s);",(name, nickname, shirt_number, position_id, team_id))
-				conn.commit()
-			except Exception as e:
-				flash('Error while adding player' + str(e),'danger')
+			if not add_player_helper(name, shirt_number, form['playerteam'], position, nickname=nickname):
+				flash('Error while adding player','danger')
 			else:
 				flash(message, 'success')
 		return render_template('add_player.html', data=pass_through)
