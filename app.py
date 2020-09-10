@@ -25,7 +25,7 @@ hostname = result.hostname
 conn = psycopg2.connect(
 	database = database,
 	user = username,
-	#password = password,
+	password = password,
 	host = hostname
 )
 conn.autocommit = True
@@ -114,6 +114,34 @@ curs.execute("""CREATE VIEW player_details_full AS
 					positions
 					ON
 					positions.position_id = player_details.position_id
+				;
+				 """)
+conn.commit()
+# mikey's inner join attempt
+curs.execute("""CREATE VIEW fixtures_details_full AS
+				SELECT
+				fixtures_individual.goals,
+				fixtures_individual.d_flicks,
+				fixtures_individual.assists,
+				fixtures_individual.greens,
+				fixtures_individual.yellows,
+				fixtures_individual.reds,
+				fixtures_individual.p_flicks_scored,
+				fixtures_individual.p_flicks_missed,
+				fixtures_individual.p_flicks_awarded,
+				fixtures_individual.wasMidOrDef,
+				fixtures_individual.gkgoals_conc,
+
+				fixtures_team.players,
+				fixtures_team.wessex_goals,
+				fixtures_team.opposition_goals,
+				fixtures_team.fixture_date
+
+			FROM fixtures_individual
+					INNER JOIN 
+					fixtures_team
+					ON
+					fixtures_team.fixture_id = fixtures_individual.fixture_id
 				;
 				 """)
 conn.commit()
