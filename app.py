@@ -8,6 +8,7 @@ from models import User
 from players import players_blueprint
 from user import user_blueprint
 from fixtures import fixtures_blueprint
+from teams import teams_blueprint
 # from fixtures import fixtures_blueprint
 
 
@@ -94,7 +95,24 @@ curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_individual
 							PRIMARY KEY(player_id, fixture_id));
 						""")
 conn.commit()
-curs.execute("""CREATE VIEW player_details_full AS
+curs.execute("""CREATE TABLE IF NOT EXISTS user_team
+							(user_id int REFERENCES users (user_id),
+							team_name varchar,
+							gk int REFERENCES player_details (player_id) NOT NULL,
+							def1 int REFERENCES player_details (player_id) NOT NULL,
+							def2 int REFERENCES player_details (player_id) NOT NULL,
+							def3 int REFERENCES player_details (player_id) NOT NULL,
+							mid1 int REFERENCES player_details (player_id) NOT NULL,
+							mid2 int REFERENCES player_details (player_id) NOT NULL,
+							mid3 int REFERENCES player_details (player_id) NOT NULL,
+							fwd1 int REFERENCES player_details (player_id) NOT NULL,
+							fwd2 int REFERENCES player_details (player_id) NOT NULL,
+							fwd3 int REFERENCES player_details (player_id) NOT NULL,
+							score int,
+							weekly_score int);
+	""")
+conn.commit()
+curs.execute("""CREATE OR REPLACE VIEW player_details_full AS
 				SELECT
 					player_details.player_id,
 					player_details.name,
@@ -145,6 +163,7 @@ app.secret_key = os.environ['SECRET_KEY']
 app.register_blueprint(players_blueprint)
 app.register_blueprint(user_blueprint)
 app.register_blueprint(fixtures_blueprint)
+app.register_blueprint(teams_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
