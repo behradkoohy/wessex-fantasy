@@ -94,7 +94,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS fixtures_individual
 							PRIMARY KEY(player_id, fixture_id));
 						""")
 conn.commit()
-curs.execute("""CREATE VIEW player_details_full AS
+curs.execute("""CREATE OR REPLACE VIEW player_details_full AS
 				SELECT
 					player_details.player_id,
 					player_details.name,
@@ -118,7 +118,9 @@ curs.execute("""CREATE VIEW player_details_full AS
 				 """)
 conn.commit()
 # mikey's inner join attempt
-curs.execute("""CREATE VIEW fixtures_details_full AS
+# needs to include players
+# Note to self: the attributes after 'SELECT' are the columns that will be in the view (virtual table)? So it doesn't need all the attributes, just the ones you want in the view
+curs.execute("""CREATE OR REPLACE VIEW fixtures_details_full AS
 				SELECT
 				fixtures_individual.goals,
 				fixtures_individual.d_flicks,
@@ -135,18 +137,55 @@ curs.execute("""CREATE VIEW fixtures_details_full AS
 				fixtures_team.players,
 				fixtures_team.wessex_goals,
 				fixtures_team.opposition_goals,
-				fixtures_team.fixture_date
+				fixtures_team.fixture_date,
+
+				player_details.player_id,
+				player_details.name,
+				player_details.nickname,
+				player_details.shirt_number,
+				player_details.value
 
 			FROM fixtures_individual
 					INNER JOIN 
 					fixtures_team
 					ON
 					fixtures_team.fixture_id = fixtures_individual.fixture_id
+					INNER JOIN
+					player_details
+					ON
+					player_details.team_id = fixtures_team.team_id
+
 				;
 				 """)
 conn.commit()
+# need another one with fixture teams on teams and opps fixtures_teams inner join teams inner join opps
+curs.execute("""CREATE OR REPLACE VIEW fixtures_teams_opps AS
+				SELECT
 
+				fixtures_team.players,
+				fixtures_team.wessex_goals,
+				fixtures_team.opposition_goals,
+				fixtures_team.fixture_date,
+				-- fixtures_team.opp_id,
 
+				teams.team_id,
+				teams.name AS "team_name",
+
+				opposition_teams.team_id AS "opposition id",
+				opposition_teams.name AS "opposition_name"
+
+			FROM fixtures_team
+					INNER JOIN 
+					teams
+					ON
+					teams.team_id = fixtures_team.team_id					
+					INNER JOIN
+					opposition_teams
+					ON
+					opposition_teams.team_id = fixtures_team.opp_id
+				;
+				 """)
+conn.commit()
 
 # Adding teams to the teams db
 for x, t in enumerate(wessex_teams):
