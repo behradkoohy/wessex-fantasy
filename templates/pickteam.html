@@ -14,9 +14,19 @@
 </script>
 
 <h1> Select your team </h1>
-<b>You have an initial budget of 20m</b>
 
 <form method="post">
+	<div>
+		<div class="form-group">
+			<h2>Team Details</h2>
+			<p>
+				Owner: <b>{{ current_user.name }}</b> <br>
+				You have an initial budget of 20m.
+			</p>
+			<label for="team_name">Team Name:</label>
+			<input type="text" name="team_name" id="team_name"></input>
+		</div>
+	</div>
 	<div>
 		<h2>Goalkeeper (1 permitted)</h2>
 		<div class="form-group">

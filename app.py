@@ -102,6 +102,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS user_team
 							def1 int REFERENCES player_details (player_id) NOT NULL,
 							def2 int REFERENCES player_details (player_id) NOT NULL,
 							def3 int REFERENCES player_details (player_id) NOT NULL,
+							def4 int REFERENCES player_details (player_id) NOT NULL,
 							mid1 int REFERENCES player_details (player_id) NOT NULL,
 							mid2 int REFERENCES player_details (player_id) NOT NULL,
 							mid3 int REFERENCES player_details (player_id) NOT NULL,
@@ -109,7 +110,8 @@ curs.execute("""CREATE TABLE IF NOT EXISTS user_team
 							fwd2 int REFERENCES player_details (player_id) NOT NULL,
 							fwd3 int REFERENCES player_details (player_id) NOT NULL,
 							score int,
-							weekly_score int);
+							weekly_score int,
+							leftover_value money);
 	""")
 conn.commit()
 curs.execute("""CREATE OR REPLACE VIEW player_details_full AS

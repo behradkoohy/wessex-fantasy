@@ -1,4 +1,4 @@
-from flask import Blueprint, request,render_template, flash, jsonify, redirect, url_for
+from flask import Blueprint, request,render_template, flash, jsonify, redirect, url_for, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from urllib.parse import urlparse
 import os
@@ -218,6 +218,7 @@ def pick_team():
 		# 1. Cost is below the specified amount
 		# 2. No player is bought more than once
 		# 3. You have less than 3 players from each team
+		team_name = request.form["team_name"]
 		gk = request.form['gk']
 
 		def1 = request.form['def1']
@@ -250,14 +251,46 @@ def pick_team():
 			p_sum += float(curs.fetchone()[0].replace('£',''))
 
 		if p_sum > 20000000:
-			pass
 			# Flash error here
+			flash('Your team costs too much. There is a budget of 20m.', 'danger')
+			return redirect(url_for('teams.pick_team'))
 
 		# Check 2
+		print(len(list(set(players_selected))), len(players_selected), len(list(set(players_selected))) < len(players_selected))
 		if len(list(set(players_selected))) < len(players_selected):
-			pass
 			# flash error here
+			flash('You have selected a player twice.', 'danger')
+			return redirect(url_for('teams.pick_team'))
+
+		#Check 3
+		#TODO:::
+
+
+		db_str = [session["_user_id"], team_name] + players_selected + [0, 0, 20000000-p_sum]
+		print(db_str, len(db_str))
+		curs.execute("""
+			INSERT INTO 
+				user_team
+				(user_id, 
+				team_name, 
+				gk, 
+				def1, def2, def3, def4, 
+				mid1, mid2, mid3, 
+				fwd1, fwd2, fwd3,
+				score,
+				weekly_score,
+				leftover_value)
+			VALUES
+				( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+			""", tuple(db_str) )
+
+
 
 
 		return jsonify(request.form)
 	return render_template('pickteam.html', data=passthrough)
+
+
+@teams_blueprint.route('/league')
+def league_view():
+	pass
