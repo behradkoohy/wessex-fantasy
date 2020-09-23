@@ -7,19 +7,28 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+<script type="text/javascript">
 
+	var dict = new Object();
+
+</script>
 
 <h1> Select your team </h1>
+<b>You have an initial budget of 20m</b>
 
 <form method="post">
 	<div>
 		<h2>Goalkeeper (1 permitted)</h2>
 		<div class="form-group">
-			<label for="Goalkeepers">Goalkeeper</label>
-			<select id="Goalkeepers" name="Goalkeeper" class="selectpicker w-100" data-live-search="true" title="Goalkeepers">
-				{% for p in data['players_gk'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<label for="gk">Goalkeeper</label>
+			<select id="gk" name="gk" class="selectpicker w-100" data-live-search="true" title="Goalkeepers" required onchange="choice1(this)">
+				{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_gk_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 	</div>
@@ -27,34 +36,50 @@
 		<h2>Defenders (4 permitted)</h2>
 		<div class="form-group">
 			<label for="def1">Defender</label>
-			<select id="def1" name="def1" class="selectpicker w-100" data-live-search="true" title="Defender">
-			  	{% for p in data['players_df'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="def1" name="def1" class="selectpicker w-100" data-live-search="true" title="Defender" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_df_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="def2">Defender</label>
-			<select id="def2" name="def2" class="selectpicker w-100" data-live-search="true" title="Defender">
-			  	{% for p in data['players_df'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="def2" name="def2" class="selectpicker w-100" data-live-search="true" title="Defender" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_df_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="def3">Defender</label>
-			<select id="def3" name="def3" class="selectpicker w-100" data-live-search="true" title="Defender">
-			  	{% for p in data['players_df'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="def3" name="def3" class="selectpicker w-100" data-live-search="true" title="Defender" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_df_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="def4">Defender (Substitute)</label>
-			<select id="def4" name="def4" class="selectpicker w-100" data-live-search="true" title="Defender">
-			  	{% for p in data['players_df'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="def4" name="def4" class="selectpicker w-100" data-live-search="true" title="Defender" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_df_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 
@@ -63,26 +88,38 @@
 		<h2>Midfielders (3 permitted)</h2>
 		<div class="form-group">
 			<label for="mid1">Midfielder</label>
-			<select id="mid1" name="mid1" class="selectpicker w-100" data-live-search="true" title="Midfielder">
-			  	{% for p in data['players_md'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="mid1" name="mid1" class="selectpicker w-100" data-live-search="true" title="Midfielder" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_md_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="mid2">Midfielder</label>
-			<select id="mid2" name="mid2" class="selectpicker w-100" data-live-search="true" title="Midfielder">
-			  	{% for p in data['players_md'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="mid2" name="mid2" class="selectpicker w-100" data-live-search="true" title="Midfielder" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_md_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="mid3">Midfielder (Substitute)</label>
-			<select id="mid3" name="mid3" class="selectpicker w-100" data-live-search="true" title="Midfielder">
-			  	{% for p in data['players_md'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="mid3" name="mid3" class="selectpicker w-100" data-live-search="true" title="Midfielder" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_md_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 	</div>
@@ -90,30 +127,59 @@
 		<h2>Forwards (3 permitted)</h2>
 		<div class="form-group">
 			<label for="fwd1">Forward</label>
-			<select id="fwd1" name="fwd1" class="selectpicker w-100" data-live-search="true" title="Forward">
-			  	{% for p in data['players_fw'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="fwd1" name="fwd1" class="selectpicker w-100" data-live-search="true" title="Forward" required onchange="choice1(this)">
+				{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_fw_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="fwd2">Forward</label>
-			<select id="fwd2" name="fwd2" class="selectpicker w-100" data-live-search="true" title="Forward">
-			  	{% for p in data['players_fw'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="fwd2" name="fwd2" class="selectpicker w-100" data-live-search="true" title="Forward" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_fw_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="fwd3">Forward (Substitute)</label>
-			<select id="fwd3" name="fwd3" class="selectpicker w-100" data-live-search="true" title="Forward">
-			  	{% for p in data['players_fw'] %}
-					  <option data-tokens="{{p['name']}}">{{ p['name'] }}</option>
-			  	{% endfor %}
+			<select id="fwd3" name="fwd3" class="selectpicker w-100" data-live-search="true" title="Forward" required onchange="choice1(this)">
+			  	{% for x in range(1,6) %}
+					<optgroup label="{{x}}s">
+						{% for p in data['players_fw_' + x|string ] %}
+					  		<option data-tokens="{{p['name']}}" value="{{ p['player_id'] }}" p_val="{{ p['value'] }}">{{ p['name'] }} - £{{ p['value'] }}</option>
+			  			{% endfor %}
+					</optgroup>
+				{% endfor %}
 			</select>
 		</div>
-	</div>
+	</div>	
+	<p id="costText">You have £20000000 remaining.</p>
 	<button type="submit" class="btn btn-primary" method="post">Submit</button>
 </form>
+
+
+<script type="text/javascript">
+	function choice1(select) {
+    	// alert(select.options[select.selectedIndex].getAttribute("p_val"));
+	    dict[select.id] = parseFloat(select.options[select.selectedIndex].getAttribute("p_val"));
+	    var sum = 0;
+	    for (var key in dict){
+	    	sum = sum + dict[key];
+	    };
+	    console.log(sum);
+	    sum = 20000000 - sum;
+	    var s = "You have £"
+	    document.getElementById("costText").innerHTML = s.concat(sum, " remaining.")
+	}
+</script>
 
 {% endblock %}
