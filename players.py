@@ -52,7 +52,7 @@ def add_player_helper(name, shirt_number, team, position, nickname=""):
 	position_id = curs.fetchone()[0]
 
 	try:
-		curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id) VALUES (%s, %s, %s, %s, %s);",(name, nickname, shirt_number, position_id, team_id))
+		curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id, value) VALUES (%s, %s, %s, %s, %s, 100);",(name, nickname, shirt_number, position_id, team_id))
 		conn.commit()
 	except Exception as e:
 		return False
