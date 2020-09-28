@@ -288,9 +288,19 @@ def pick_team():
 
 
 		return jsonify(request.form)
+		"""
+		TODO: add in the redirect into the league/team page
+		"""
+
+
+
 	return render_template('pickteam.html', data=passthrough)
 
 
 @teams_blueprint.route('/league')
 def league_view():
-	pass
+	passthrough = {}
+	curs.execute("SELECT name, team_name, score, user_id FROM league_view ORDER BY score DESC;")
+	passthrough['teams'] = curs.fetchall()
+	#return jsonify(passthrough['teams'] )
+	return render_template('league.html', data=passthrough)

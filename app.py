@@ -207,6 +207,33 @@ curs.execute("""CREATE OR REPLACE VIEW fixtures_teams_opps AS
 				 """)
 conn.commit()
 
+
+curs.execute("""CREATE OR REPLACE VIEW league_view AS
+				SELECT
+					users.user_id,
+					users.name,
+
+					user_team.team_name,
+					user_team.gk,
+					user_team.def1,
+					user_team.def2,
+					user_team.def3,
+					user_team.def4,
+					user_team.mid1,
+					user_team.mid2,
+					user_team.mid3,
+					user_team.fwd1,
+					user_team.fwd2,
+					user_team.fwd3,
+					user_team.score
+				FROM users
+					INNER JOIN
+					user_team
+					ON
+					users.user_id = user_team.user_id
+				;
+				""")
+
 # Adding teams to the teams db
 for x, t in enumerate(wessex_teams):
 	curs = conn.cursor()

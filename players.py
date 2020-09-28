@@ -50,9 +50,14 @@ def add_player_helper(name, shirt_number, team, position, nickname=""):
 	team_id = curs.fetchone()[0]
 	curs.execute("SELECT position_id FROM positions WHERE position_name = %s ;", (position, ))
 	position_id = curs.fetchone()[0]
+	value = (6 - team_id) * 1000000
+	if team_id == 1:
+		value = 7000000
+	elif team_id == 2:
+		value = 5000000
 
 	try:
-		curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id, value) VALUES (%s, %s, %s, %s, %s, 100);",(name, nickname, shirt_number, position_id, team_id))
+		curs.execute("INSERT INTO player_details (name, nickname, shirt_number, position_id, team_id, value) VALUES (%s, %s, %s, %s, %s, %s);",(name, nickname, shirt_number, position_id, team_id, value))
 		conn.commit()
 	except Exception as e:
 		return False
@@ -102,8 +107,9 @@ def playerdetails(pid):
 	curs.execute(""" SELECT player_details.name, 
 							player_details.nickname, 
 							player_details.shirt_number,
-							positions.position_name, 
-							teams.name 
+							positions.position_name,
+							teams.name,
+							player_details.value
 							FROM 
 							player_details 
 							INNER JOIN 
@@ -124,7 +130,8 @@ def playerdetails(pid):
 		1:'nickname', 
 		2:'shirt_number',
 		3:'position_name', 
-		4:'team'
+		4:'team',
+		5:'value'
 	}
 
 	passthrough_player_details = {titles[key]: player_details[key] for key in titles}
@@ -155,10 +162,6 @@ def playerdetails(pid):
 	p_fix_info_reorg = []
 	for p in p_fix_info:
 		p_fix_info_reorg.append({colnames[key]: p[key] for key in colnames})
-
-
-
-	# return jsonify(p_fix_info_reorg
 
 
 	return render_template('player_page.html', details=passthrough_player_details, fix_info=p_fix_info_reorg)
