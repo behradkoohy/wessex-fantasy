@@ -1,4 +1,4 @@
-from flask import Blueprint, request,render_template, flash, jsonify
+from flask import Blueprint, request,render_template, flash, jsonify, abort
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from urllib.parse import urlparse
 import os
@@ -125,6 +125,9 @@ def playerdetails(pid):
 		""", (pid, ))
 	player_details = curs.fetchone()
 
+	if player_details is None:
+		abort(404, description="Player not found.")
+
 	titles = {
 		0:'name', 
 		1:'nickname', 
@@ -135,7 +138,7 @@ def playerdetails(pid):
 	}
 
 	passthrough_player_details = {titles[key]: player_details[key] for key in titles}
-
+	
 	curs.execute("""SELECT fixtures_individual.*, 
 		fixtures_team.fixture_date,
 		fixtures_team.wessex_goals,
