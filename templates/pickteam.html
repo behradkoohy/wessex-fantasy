@@ -180,7 +180,7 @@
 <script type="text/javascript">
 	function choice1(select) {
     	// alert(select.options[select.selectedIndex].getAttribute("p_val"));
-	    dict[select.id] = parseFloat(select.options[select.selectedIndex].getAttribute("p_val"));
+	    dict[select.id] = parseFloat(select.options[select.selectedIndex].getAttribute("p_val").replace(/,/g,""));
 	    var sum = 0;
 	    for (var key in dict){
 	    	sum = sum + dict[key];
